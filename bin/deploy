@@ -1,0 +1,71 @@
+#! /usr/bin/env node
+const shelljs = require('shelljs')
+const path = require('path')
+const fs = require('fs')
+const chalk = require('chalk')
+const bold = chalk.green.underline.bold
+const warning = chalk.keyword('orange')
+const data = fs.readFileSync(resolve('./package.json'),'utf8')
+const _package = JSON.parse(data)
+let initFlag = false
+
+const argv = require('yargs')
+  .command('init', 'init deploy config', (yargs) => {}, (argv) => {
+    initFlag = true
+    initConfig()
+  }).config({
+    '--gulpfile': path.resolve(__dirname, '../gulpfile.js')
+  })
+  .argv
+
+process.env.INIT_CW = process.cwd()
+process.env.DEPLOY_ENV = argv.env
+
+function resolve(_path){
+    return path.resolve(process.cwd(), _path);
+}
+
+function initConfig(){
+    if(_package.initDeploy){ 
+        return console.log(warning('Completed init already!'))
+    }
+    const defaultDevConf = {
+        name: 'loops pre-release',
+        host: '10.30.0.6',
+        port: 22,
+        username: 'mozat',
+        password: '${Your local filePath of password}',
+        remotePath: '/var/www/loopslive/web/web-loops/${remoteDir}',
+        dist: './dist'
+    }
+
+    const defaultProConf = {
+        name: 'loops release',
+        host: '10.40.1.85',
+        port: 22,
+        username: 'mozat',
+        password: '${Your local filePath of password}',
+        remotePath: '/home/mozat/www/loopslive-web2/web-loops/${remoteDir}',
+        dist: './dist'
+    }
+    try{
+        fs.writeFileSync(resolve('./deploy.dev.conf'), JSON.stringify(defaultDevConf, null, 4))
+        fs.writeFileSync(resolve('./deploy.pro.conf'), JSON.stringify(defaultProConf, null, 4))
+        _package.scripts["deploy:pre"] = "deploy-loopslive-web --env pre"
+        _package.scripts["deploy:pro"] = "deploy-loopslive-web --env pro"
+        _package["initDeploy"] = true
+        let str = JSON.stringify(_package, null, 4)
+
+        fs.writeFileSync(resolve('./package.json'),str)
+        console.log(`${warning('deploy pre-release:')}: Confg ${bold('deploy.dev.conf')} firstly and use ${bold('npm run deploy:pre')}`);
+        console.log(`${warning('deploy release:')}: Confg ${bold('deploy.pro.conf')} firstly and use ${bold('npm run deploy:pro')}`);
+        console.log(`deploy init done~!`)
+    }catch(err){
+        console.log(err)
+    }
+}
+
+!initFlag && _package.initDeploy && require('gulp/bin/gulp.js')
+
+
+

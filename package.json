@@ -1,0 +1,31 @@
+{
+    "name": "deploy-loopslive-web",
+    "version": "0.1.0",
+    "description": "",
+    "main": "./bin/deploy",
+    "bin": {
+        "deploy-loopsweb": "./bin/deploy"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "deploy:pre": "deploy-loopsweb --env pre",
+        "deploy:pro": "deploy-loopsweb --env pro"
+    },
+    "author": "Nuluf",
+    "license": "ISC",
+    "dependencies": {
+        "chalk": "^2.4.2",
+        "del": "^3.0.0",
+        "gulp": "^3.9.1",
+        "gulp-ssh": "^0.7.0",
+        "gulp-upload": "^1.0.0",
+        "gulp-zip": "^4.2.0",
+        "minimist": "^1.2.0",
+        "run-sequence": "^2.2.1",
+        "shelljs": "^0.8.2",
+        "write": "^1.0.3",
+        "yargs": "^12.0.2"
+    },
+    "devDependencies": {},
+    "initDeploy": true
+}
