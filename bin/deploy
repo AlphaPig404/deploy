@@ -8,16 +8,17 @@ const warning = chalk.keyword('orange')
 const data = fs.readFileSync(resolve('./package.json'),'utf8')
 const _package = JSON.parse(data)
 let initFlag = false
+const gulpfilePath = path.resolve(__dirname, '../gulpfile.js')
 
 const argv = require('yargs')
   .command('init', 'init deploy config', (yargs) => {}, (argv) => {
     initFlag = true
     initConfig()
   }).config({
-    '--gulpfile': path.resolve(__dirname, '../gulpfile.js')
+    '--gulpfile': gulpfilePath
   })
   .argv
-
+console.log(gulpfilePath)
 process.env.INIT_CW = process.cwd()
 process.env.DEPLOY_ENV = argv.env
 
@@ -65,7 +66,7 @@ function initConfig(){
     }
 }
 
-!initFlag && _package.initDeploy && require('gulp/bin/gulp.js')
+!initFlag && _package.initDeploy && require('../gulpfile')
 
 
 

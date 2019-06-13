@@ -73,6 +73,8 @@ gulp.task("packing", (cb) => {
   return runSequence("clean", "compress", cb);
 })
 
-gulp.task("default", function(cb) {
-  runSequence("packing", "deploy", cb);
+gulp.task("default",["packing", "deploy"], function(cb) {
+  console.log(chalk.green.bold('Complete deploy!'));
 })
+
+gulp.start.apply(gulp, ['default']);
