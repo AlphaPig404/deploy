@@ -8,14 +8,12 @@
 const path = require('path')
 const gulp = require("gulp")
 const zip = require("gulp-zip")
-const upload = require("gulp-upload")
 const del = require("del")
 const shelljs = require('shelljs')
 const runSequence = require("run-sequence")
 const argv = require('yargs').argv
 const GulpSSH = require('gulp-ssh')
 const fs= require('fs')
-const writeFile = require('write')
 const chalk = require('chalk')
 const error = chalk.bold.red
 const warning = chalk.keyword('orange')
