@@ -1,6 +1,6 @@
 {
     "name": "deploy-loopslive-web",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "Deploy your static website by one line command",
     "main": "./bin/deploy",
     "bin": {
