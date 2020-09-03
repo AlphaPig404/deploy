@@ -5,68 +5,71 @@ const fs = require('fs')
 const chalk = require('chalk')
 const bold = chalk.green.underline.bold
 const warning = chalk.keyword('orange')
-const data = fs.readFileSync(resolve('./package.json'),'utf8')
-const _package = JSON.parse(data)
-let initFlag = false
-const gulpfilePath = path.resolve(__dirname, '../gulpfile.js')
+const packageJson = fs.readFileSync(resolve('./package.json'),'utf8')
+const _package = JSON.parse(packageJson)
+const {start} = require('../index')
 
 const argv = require('yargs')
   .command('init', 'init deploy config', (yargs) => {}, (argv) => {
-    initFlag = true
-    initConfig()
-  }).config({
-    '--gulpfile': gulpfilePath
+    initConfig(argv.env)
+  })
+  .command('start', 'start deploy', (yargs) => {}, (argv) => {
+    startDeploy(argv.env)
   })
   .argv
-  
-process.env.INIT_CW = process.cwd()
-process.env.DEPLOY_ENV = argv.env
 
 function resolve(_path){
-    return path.resolve(process.cwd(), _path);
+    return path.resolve(process.env.PWD, _path);
 }
 
-function initConfig(){
-    if(_package.initDeploy){ 
-        return console.log(warning('Completed init already!'))
-    }
-    const defaultDevConf = {
-        name: 'loops pre-release',
-        host: '10.30.0.6',
+function initConfig(env){
+    const defaultConf = {
+        name: '',
+        host: '',
         port: 22,
-        username: 'mozat',
+        username: '${Username for authentication}',
         password: '${Your local filePath of password}',
-        remotePath: '/var/www/loopslive/web/web-loops/${remoteDir}',
-        dist: './dist'
-    }
-
-    const defaultProConf = {
-        name: 'loops release',
-        host: '10.40.1.85',
-        port: 22,
-        username: 'mozat',
-        password: '${Your local filePath of password}',
-        remotePath: '/home/mozat/www/loopslive-web2/web-loops/${remoteDir}',
-        dist: './dist'
+        remotePath: '${Your remote path}',
+        remoteDirName: '${Dest dir name}',
+        dist: '${Your local dist path}'
     }
     try{
-        fs.writeFileSync(resolve('./deploy.dev.conf'), JSON.stringify(defaultDevConf, null, 4))
-        fs.writeFileSync(resolve('./deploy.pro.conf'), JSON.stringify(defaultProConf, null, 4))
-        _package.scripts["deploy:pre"] = "deploy-loopslive-web --env pre"
-        _package.scripts["deploy:pro"] = "deploy-loopslive-web --env pro"
-        _package["initDeploy"] = true
-        let str = JSON.stringify(_package, null, 4)
-
+        const isExists = fs.existsSync(resolve(`./deploy.${env}.conf`))
+        if(isExists){
+            console.log(`${warning(`deploy.${env}.conf already exists:`)}: Config ${bold(`deploy.${env}.conf`)} firstly and use ${bold(`npm run deploy:${env}`)}`);
+            return;
+        }
+        fs.writeFileSync(resolve(`./deploy.${env}.conf`), JSON.stringify(defaultConf, null, 4))
+        _package.scripts[`deploy:${env}`] = `deploy-loopslive-web start --env ${env}`
+        const str = JSON.stringify(_package, null, 4)
         fs.writeFileSync(resolve('./package.json'),str)
-        console.log(`${warning('deploy pre-release:')}: Confg ${bold('deploy.dev.conf')} firstly and use ${bold('npm run deploy:pre')}`);
-        console.log(`${warning('deploy release:')}: Confg ${bold('deploy.pro.conf')} firstly and use ${bold('npm run deploy:pro')}`);
+        console.log(`${warning(`deploy ${env}:`)}: Config ${bold(`deploy.${env}.conf`)} firstly and use ${bold(`npm run deploy:${env}`)}`);
         console.log(`deploy init done~!`)
     }catch(err){
         console.log(err)
     }
 }
 
-!initFlag && _package.initDeploy && require('../gulpfile')
+function startDeploy(env){
+    try{
+        const jsonFile = fs.readFileSync(resolve(`./deploy.${env}.conf`))
+        const options = JSON.parse(jsonFile)
+
+        const arr = Object.keys(options).filter(key => !options[key])
+        if(arr.length){
+           const str = arr.join(',')
+           console.log(`${bold(str)}  is required in ${bold(`deploy.${env}.conf`)} `)
+        }else{
+            process.env.DEPLOY_ENV = env
+            start()
+        } 
+    }catch(err){
+        initConfig(env)
+    }
+}
+
+
+
 
 
 

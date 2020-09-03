@@ -8,21 +8,20 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "deploy:pre": "deploy-loopsweb --env pre",
-        "deploy:pro": "deploy-loopsweb --env pro"
+        "deploy:pre": "deploy-loopslive-web --env pre",
+        "deploy:pro": "deploy-loopslive-web --env pro"
     },
     "author": "Nuluf",
     "license": "ISC",
     "dependencies": {
         "chalk": "^2.4.2",
         "del": "^3.0.0",
-        "gulp": "^3.9.1",
+        "gulp": "^4.0.2",
         "gulp-ssh": "^0.7.0",
         "gulp-zip": "^4.2.0",
         "run-sequence": "^2.2.1",
         "shelljs": "^0.8.2",
         "yargs": "^12.0.2"
     },
-    "devDependencies": {},
-    "initDeploy": true
+    "devDependencies": {}
 }
