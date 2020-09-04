@@ -8,8 +8,7 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "deploy:pre": "deploy-loopslive-web --env pre",
-        "deploy:pro": "deploy-loopslive-web --env pro"
+        "deploy:pre": "deploy-loopslive-web start --env pre"
     },
     "author": "Nuluf",
     "license": "ISC",

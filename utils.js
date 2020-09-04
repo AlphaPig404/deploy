@@ -1,4 +1,5 @@
-const path = require("path")
+const path = require('path')
+const fs = require('fs')
 
 function resolveLocal(_path){
    return path.resolve(process.env.PWD, _path)
@@ -12,6 +13,15 @@ function readOptions(){
     return options
 }
 
+function getPassword(){
+    const options = readOptions()
+    try{
+       const pwd = fs.readFileSync(options.password, 'utf8').replace(/[\r\n]/g,'')
+       return pwd
+    }catch(err){
+        console.log(err)
+    }
+}
 function getConfName(env){
     return `deploy.${env}.conf`
 }
@@ -20,5 +30,6 @@ function getConfName(env){
 module.exports = {
     resolveLocal: resolveLocal,
     readOptions: readOptions,
-    getConfName: getConfName
+    getConfName: getConfName,
+    getPassword: getPassword
 }

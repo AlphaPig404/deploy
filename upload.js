@@ -1,5 +1,5 @@
 const Client = require('ssh2').Client;
-const { readOptions, resolveLocal } = require('./utils')
+const { readOptions, resolveLocal, getPassword } = require('./utils')
 const { resolve } = require('path');
 const { connect } = require('http2');
 
@@ -22,7 +22,7 @@ function startUpload(cb){
             if(err) throw err;
             sftp.fastPut(localFilePath, remoteFilePath, {
                 step: function(tt,c,t){
-                    console.log('upload',tt, c, t)
+                    console.log('upload: '+(tt/t * 100)+'%' )
                 }
             }, function(err){
                 if(err) throw err;
@@ -46,7 +46,7 @@ function startUpload(cb){
         host: options.host,
         port: options.port,
         username: options.username,
-        password: options.password
+        password: getPassword()
     })
 }
 

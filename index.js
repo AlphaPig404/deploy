@@ -17,14 +17,13 @@ const warning = chalk.keyword('orange')
 const { startUpload } = require('./upload')
 const { resolveLocal,readOptions }= require('./utils')
 
-const config = readOptions()
-
 const clean = (cb) => {
   del([resolveLocal("./dist.zip")], {force: true});
   cb()
 }
 
 const compress = () => {
+  const config = readOptions()
   return gulp
     .src(resolveLocal(path.join(config.dist, '/**')))
     .pipe(zip("dist.zip"))
