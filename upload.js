@@ -1,21 +1,21 @@
 const Client = require('ssh2').Client;
-const {readOptions} = require('./config')
+const { readOptions, resolveLocal } = require('./utils')
 const { resolve } = require('path');
 const { connect } = require('http2');
 
+
 function startUpload(cb){
     const conn = new Client;
-    const pwd = process.env.PWD
     const options = readOptions()
 
-    const localFilePath = resolve(pwd, './dist.zip')
+    const localFilePath = resolveLocal('./dist.zip')
     const remoteFilePath = resolve(options.remotePath, './dist.zip')
     const remotePath = resolve(options.remotePath, options.remoteDirName)
 
     const commands = [
         `unzip -o ${remoteFilePath} -d ${remotePath}`,
     ]
-    
+
     conn.on('ready',() => {
         console.log('Client :: ready')
         conn.sftp(function(err, sftp){

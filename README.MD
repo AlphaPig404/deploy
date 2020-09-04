@@ -38,11 +38,12 @@ npm install -g deploy-loopslive-web
 ```
     {
         "name": "project name",
-        "host": "10.30.0.6",
+        "host": "120.78.194.223",
         "port": 22,
-        "username": "mozat",
+        "username": "lun",
         "password": "/Users/chris/.ssh/pwd",
-        "remotePath": "/var/www/loopslive/web/web-loops/testDeploy",
+        "remotePath": "/var/www",
+        "remoteDir": "targe",
         "dist": "./dist"
     }
 ```

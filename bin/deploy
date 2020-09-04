@@ -5,7 +5,9 @@ const fs = require('fs')
 const chalk = require('chalk')
 const bold = chalk.green.underline.bold
 const warning = chalk.keyword('orange')
-const packageJson = fs.readFileSync(resolve('./package.json'),'utf8')
+const {resolveLocal, readOptions, getConfName} = require('../utils')
+
+const packageJson = fs.readFileSync(resolveLocal('./package.json'),'utf8')
 const _package = JSON.parse(packageJson)
 const {start} = require('../index')
 
@@ -17,10 +19,6 @@ const argv = require('yargs')
     startDeploy(argv.env)
   })
   .argv
-
-function resolve(_path){
-    return path.resolve(process.env.PWD, _path);
-}
 
 function initConfig(env){
     const defaultConf = {
@@ -34,16 +32,16 @@ function initConfig(env){
         dist: '${Your local dist path}'
     }
     try{
-        const isExists = fs.existsSync(resolve(`./deploy.${env}.conf`))
+        const isExists = fs.existsSync(resolveLocal(getConfName(env)))
         if(isExists){
-            console.log(`${warning(`deploy.${env}.conf already exists:`)}: Config ${bold(`deploy.${env}.conf`)} firstly and use ${bold(`npm run deploy:${env}`)}`);
+            console.log(`${warning(`${getConfName(env)} already exists:`)}: Config ${bold(getConfName(env))} firstly and use ${bold(`npm run deploy:${env}`)}`);
             return;
         }
-        fs.writeFileSync(resolve(`./deploy.${env}.conf`), JSON.stringify(defaultConf, null, 4))
+        fs.writeFileSync(resolveLocal(getConfName(env)), JSON.stringify(defaultConf, null, 4))
         _package.scripts[`deploy:${env}`] = `deploy-loopslive-web start --env ${env}`
         const str = JSON.stringify(_package, null, 4)
-        fs.writeFileSync(resolve('./package.json'),str)
-        console.log(`${warning(`deploy ${env}:`)}: Config ${bold(`deploy.${env}.conf`)} firstly and use ${bold(`npm run deploy:${env}`)}`);
+        fs.writeFileSync(resolveLocal('./package.json'),str)
+        console.log(`${warning(`deploy ${env}:`)}: Config ${bold(getConfName(env))} firstly and use ${bold(`npm run deploy:${env}`)}`);
         console.log(`deploy init done~!`)
     }catch(err){
         console.log(err)
@@ -52,13 +50,11 @@ function initConfig(env){
 
 function startDeploy(env){
     try{
-        const jsonFile = fs.readFileSync(resolve(`./deploy.${env}.conf`))
-        const options = JSON.parse(jsonFile)
-
+        const options = readOptions()
         const arr = Object.keys(options).filter(key => !options[key])
         if(arr.length){
            const str = arr.join(',')
-           console.log(`${bold(str)}  is required in ${bold(`deploy.${env}.conf`)} `)
+           console.log(`${bold(str)}  is required in ${bold(getConfName(env))} `)
         }else{
             process.env.DEPLOY_ENV = env
             start()

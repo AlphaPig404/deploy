@@ -14,12 +14,10 @@ const fs= require('fs')
 const chalk = require('chalk')
 const error = chalk.bold.red
 const warning = chalk.keyword('orange')
-const { readOptions } = require('./config')
 const { startUpload } = require('./upload')
-const { resolveLocal }= require('./utils')
+const { resolveLocal,readOptions }= require('./utils')
 
 const config = readOptions()
-
 
 const clean = (cb) => {
   del([resolveLocal("./dist.zip")], {force: true});
