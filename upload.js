@@ -43,13 +43,13 @@ function startUpload(cb){
                 console.log('Exec commands: %s', command)
                 conn.exec(command, (err, stream) => {
                     if(err) throw err;
-                    stream.on('end', function() {
+                    stream.on('data', data => {
+                        console.log(data.toString())
+                    }).stderr.on('data', err =>{
+                        cb(err)
+                    }).on('close', function() {
                         conn.end(); 
                         cb();
-                    }).on('data', data => {
-                        console.log(data.toString())
-                    }).on('error', err => {
-                        cb(err)
                     })
                 })
                 
