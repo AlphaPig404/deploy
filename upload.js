@@ -41,10 +41,14 @@ function startUpload(cb){
                 if(err) throw err;
                 const command = commands.join(';')
                 console.log('Exec commands: %s', command)
-                conn.exec(command, err => {
+                conn.exec(command, (err, stream) => {
                     if(err) throw err;
-                    conn.end()
-                    cb()
+                    stream.on('end', function() {
+                        conn.end(); 
+                        cb();
+                    }).on('data', function(data) {
+                        cb(data.toString());
+                    });
                 })
                 
             })

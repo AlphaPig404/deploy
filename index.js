@@ -33,8 +33,12 @@ const compress = () => {
 const publish = function(cb) {
   const config = readOptions()
   console.log(chalk.green.bold('Uploading...'))
-  startUpload(()=>{
-    console.log(chalk.green.bold(`Complete deploying ${config.name}!`));
+  startUpload((err)=>{
+    if(err) {
+      console.log(err)
+    }else{
+      console.log(chalk.green.bold(`Complete deploying ${config.name}!`));
+    }
     cb()
   })
 }
