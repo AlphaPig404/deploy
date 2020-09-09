@@ -34,11 +34,8 @@ const publish = function(cb) {
   const config = readOptions()
   console.log(chalk.green.bold('Uploading...'))
   startUpload((err)=>{
-    if(err) {
-      console.log(err)
-    }else{
-      console.log(chalk.green.bold(`Complete deploying ${config.name}!`));
-    }
+    if(err) throw err
+    console.log(chalk.green.bold(`Complete deploying ${config.name}!`));
     cb()
   })
 }

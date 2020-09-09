@@ -46,9 +46,11 @@ function startUpload(cb){
                     stream.on('end', function() {
                         conn.end(); 
                         cb();
-                    }).on('data', function(data) {
-                        cb(data.toString());
-                    });
+                    }).on('data', data => {
+                        console.log(data.toString())
+                    }).on('error', err => {
+                        cb(err)
+                    })
                 })
                 
             })
