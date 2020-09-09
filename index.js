@@ -15,7 +15,7 @@ const chalk = require('chalk')
 const error = chalk.bold.red
 const warning = chalk.keyword('orange')
 const { startUpload } = require('./upload')
-const { resolveLocal,readOptions }= require('./utils')
+const { resolveLocal, readOptions }= require('./utils')
 
 const clean = (cb) => {
   del([resolveLocal("./dist.zip")], {force: true});
@@ -31,9 +31,10 @@ const compress = () => {
 }
 
 const publish = function(cb) {
-  console.log(chalk.green.bold('uploading...'))
+  const config = readOptions()
+  console.log(chalk.green.bold('Uploading...'))
   startUpload(()=>{
-    console.log(chalk.green.bold('Complete deploy!'));
+    console.log(chalk.green.bold(`Complete deploying ${config.name}!`));
     cb()
   })
 }

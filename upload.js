@@ -1,4 +1,5 @@
 const Client = require('ssh2').Client;
+const ProgressBar = require('progress');
 const { readOptions, resolveLocal, getPassword } = require('./utils')
 const { resolve } = require('path');
 const { connect } = require('http2');
@@ -17,20 +18,32 @@ function startUpload(cb){
     ]
 
     conn.on('ready',() => {
-        console.log('Client :: ready')
+        console.log('Client :: ready :: %s', options.host)
         conn.sftp(function(err, sftp){
             if(err) throw err;
+            let bar;
             sftp.fastPut(localFilePath, remoteFilePath, {
-                step: function(tt,c,t){
-                    console.log('upload: '+(tt/t * 100)+'%' )
+                step: function(tt,chunk,total){
+                    // console.log('upload: '+(tt/t * 100)+'%' )
+                    if(bar){
+                        bar.tick(chunk)
+                    }else{
+                        bar = new ProgressBar('uploading [:bar] :rate/bps :percent :etas',{
+                            complete: '=',
+                            incomplete: ' ',
+                            width: 20,
+                            total: total
+                        })
+                        bar.tick(chunk)
+                    }
                 }
             }, function(err){
                 if(err) throw err;
-                console.log('exec commands')
-                conn.exec(commands.join(';'), err => {
+                const command = commands.join(';')
+                console.log('Exec commands: %s', command)
+                conn.exec(command, err => {
                     if(err) throw err;
                     conn.end()
-
                     cb()
                 })
                 

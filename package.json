@@ -1,14 +1,13 @@
 {
     "name": "deploy-loopslive-web",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "description": "Deploy your static website by one line command",
     "main": "./bin/deploy",
     "bin": {
         "deploy-loopsweb": "./bin/deploy"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "deploy:pre": "deploy-loopslive-web start --env pre"
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Nuluf",
     "license": "ISC",
@@ -18,6 +17,7 @@
         "gulp": "^4.0.2",
         "gulp-ssh": "^0.7.0",
         "gulp-zip": "^4.2.0",
+        "progress": "^2.0.3",
         "run-sequence": "^2.2.1",
         "shelljs": "^0.8.2",
         "yargs": "^12.0.2"
