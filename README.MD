@@ -15,7 +15,7 @@ npm install -g deploy-loopslive-web
 ## Usage :
 * init project
 ```
-    deploy-loopsweb init
+    deploy-loopslive-web init
 ```
 * config deploy.dev.conf/deploy.pro.conf
 ```

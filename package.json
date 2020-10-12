@@ -4,7 +4,7 @@
     "description": "Deploy your static website by one line command",
     "main": "./bin/deploy",
     "bin": {
-        "deploy-loopsweb": "./bin/deploy"
+        "deploy-loopslive-web": "./bin/deploy"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
